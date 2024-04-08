@@ -1,21 +1,21 @@
-# Итоговый проект
+# Final project
 
 ### Team Member
 - Рахарди Сандикха РИМ-130908
 - Мухин Виктор Александрович РИМ-130908
 
-### ==============================================
+### ==============================================================
 
-### Как запустить приложение
+## How to launch the application
 
-## Шаг 1: Клонирование репозитория
-Сначала необходимо склонировать репозиторий с помощью команды:
+### Step 1: Cloning the repository
+First you need to clone the repository using the command:
 ```bash
 git clone https://github.com/kuldii/program_engineer_final_project_2.git
 ```
 
-## Шаг 2: Установка зависимостей
-Перейдите в каталог проекта и установите необходимые зависимости с помощью команды:
+### Step 2: Install dependencies
+Go to your project directory and install the required dependencies using the command:
 ```bash
 pip install --upgrade pip
 ```
@@ -23,12 +23,12 @@ pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-## Шаг 3: Запуск приложения
-Для запуска приложения введите следующую команду в терминале:
+### Step 3: Launch the application
+To run the application, enter the following command in the terminal:
 ```bash
 streamlit run main.py
 ```
 
-## Шаг 4: Открытие приложения в браузере
-Откройте ваш веб-браузер и перейдите по следующему адресу:
+### Step 4: Open the application in the browser
+Open your web browser and go to the following address:
 http://localhost:8501
