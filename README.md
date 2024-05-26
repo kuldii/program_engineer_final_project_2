@@ -23,6 +23,26 @@ pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
+### Step 3: Make Sure You Already Installed ffmpeg
+```bash
+# on Ubuntu or Debian
+sudo apt update && sudo apt install ffmpeg
+
+# on Arch Linux
+sudo pacman -S ffmpeg
+
+# on MacOS using Homebrew (https://brew.sh/)
+brew install ffmpeg
+
+# on Windows using Chocolatey (https://chocolatey.org/)
+choco install ffmpeg
+
+# on Windows using Scoop (https://scoop.sh/)
+scoop install ffmpeg
+```
+Because we are using openai-whisper that need ffmpeg, or you can read pre-requirement before used this apps
+https://github.com/openai/whisper?tab=readme-ov-file
+
 ### Step 3: Launch the application
 To run the application, enter the following command in the terminal:
 ```bash
