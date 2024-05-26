@@ -52,13 +52,16 @@ if audio_file is not None:
             st.write(transcription_text)
 
         with st.spinner("Translating transcription..."):
-            translated_text = translation(transcription_text)
+            all_transcription_text = transcription_text.split(".")
+            translated_text = translation(all_transcription_text)
             st.write("Translation in English:")
             st.write(translated_text)
 
         with st.spinner("Classify translation..."):
-            result = sentiment(translated_text)
             st.write("Classified Text:")
-            st.write(result)
+            for text in translated_text:
+                st.write(text['translation_text'])
+                result = sentiment(text['translation_text'])
+                st.write(result)
     except Exception as e:
         st.error(f"Error processing audio file: {e}")
