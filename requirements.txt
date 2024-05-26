@@ -1,5 +1,5 @@
 transformers
-pydub
 ffmpeg
+pydub
 openai-whisper
 setuptools-rust
