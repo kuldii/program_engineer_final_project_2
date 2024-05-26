@@ -8,6 +8,7 @@ from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 
 @st.cache_resource
 def load_whisper_model():
+    # Have many variants : tiny, base, small, medium or large
     return whisper.load_model("large")
 
 
@@ -53,10 +54,10 @@ if audio_file is not None:
         with st.spinner("Translating transcription..."):
             translated_text = translation(transcription_text)
             st.write("Translation in English:")
-            st.write(translated_text[0]['translation_text'])
+            st.write(translated_text)
 
         with st.spinner("Classify translation..."):
-            result = sentiment(translated_text[0]['translation_text'])
+            result = sentiment(translated_text)
             st.write("Classified Text:")
             st.write(result)
     except Exception as e:
