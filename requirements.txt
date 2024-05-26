@@ -1,3 +1,4 @@
+pydub
 ffmpeg
 openai-whisper
 setuptools-rust
