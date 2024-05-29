@@ -35,7 +35,7 @@ if audio_file is not None:
 
         st.audio(audio_path, format="audio/wav")
 
-        with st.spinner("Transcribing audio..."):
+        with st.spinner("Analyzing audio..."):
             transcription_result = whisper_model.transcribe(
                 audio_path, language="ru", fp16=False)
             transcription_text = transcription_result["text"]
@@ -46,6 +46,20 @@ if audio_file is not None:
             st.write("Classified Text:")
             result = sentiment(transcription_text)
             st.write(result)
-
+            if (result[0]['label'] == 'LABEL_2'):
+                st.write(f"""This sentence is categorized as
+                         a good sentence with a score of
+                         {result[0]['score']}""")
+            elif (result[0]['label'] == 'LABEL_0'):
+                st.write(f"""This sentence is categorized as
+                         a bad sentence with a score of
+                         {result[0]['score']}""")
+            else:
+                if (result[0]['score'] >= 0.7):
+                    st.write(f"""This sentence is categorized as
+                             a neutral sentence with a score of
+                             {result[0]['score']}""")
+                else:
+                    st.write("This sentence is difficult to categorize")
     except Exception as e:
         st.error(f"Error processing audio file: {e}")
