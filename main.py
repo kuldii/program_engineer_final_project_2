@@ -8,11 +8,12 @@ from transformers import pipeline
 @st.cache_resource
 def load_whisper_model():
     """
-    Loads the 'large' variant of the OpenAI Whisper model. This model is used for
-    transcribing audio to text.
+    Loads the 'large' variant of the OpenAI Whisper model. This model is used
+    for transcribing audio to text.
 
     Returns:
-        whisper.Whisper: A Whisper model instance loaded with the 'large' variant.
+        whisper.Whisper: A Whisper model instance loaded with
+        the 'large' variant.
     """
     return whisper.load_model("large")
 
@@ -20,12 +21,13 @@ def load_whisper_model():
 @st.cache_resource
 def load_sentiment_model():
     """
-    Loads a sentiment analysis model from Hugging Face's model hub. Specifically, it loads
-    the 'sismetanin/rubert-ru-sentiment-rusentiment' model which is fine-tuned for Russian
-    language sentiment analysis.
+    Loads a sentiment analysis model from Hugging Face's model hub.
+    Specifically, it loads the 'sismetanin/rubert-ru-sentiment-rusentiment'
+    model which is fine-tuned for Russian language sentiment analysis.
 
     Returns:
-        transformers.Pipeline: A pipeline for text classification with the loaded model.
+        transformers.Pipeline: A pipeline for text classification with
+        the loaded model.
     """
     return pipeline("text-classification",
                     model="sismetanin/rubert-ru-sentiment-rusentiment")
@@ -33,14 +35,16 @@ def load_sentiment_model():
 
 def interpret_sentiment_result(sent: list) -> str:
     """
-    Interprets the sentiment analysis result and returns a formatted string based on the
-    label and score.
+    Interprets the sentiment analysis result and returns a formatted
+    string based on the label and score.
 
     Args:
-        sent_obj (list): A list containing the sentiment analysis result with 'label' and 'score'.
+        sent_obj (list): A list containing the sentiment analysis result with
+        'label' and 'score'.
 
     Returns:
-        str: A formatted string describing the sentiment classification and its confidence.
+        str: A formatted string describing the sentiment classification
+        and its confidence.
         :param sent:
     """
     label = sent[0]['label']
@@ -48,18 +52,18 @@ def interpret_sentiment_result(sent: list) -> str:
 
     if score > 0.4:
         if label == 'LABEL_2':
-            return f"""This sentence is categorized as a good sentence 
-                        with a probability of {round(score * 100, 0)}%"""
+            return f"""This sentence is categorized as a good sentence
+ with a probability of {round(score * 100, 0)}%"""
         elif label == 'LABEL_0':
             return f"""This sentence is categorized as a bad sentence
-                        with a probability of {round(score * 100, 0)}%"""
+ with a probability of {round(score * 100, 0)}%"""
         elif label == 'LABEL_3':
-            return f"""This sentence may be bad. Need your attention"""
+            return """This sentence may be bad. Need your attention"""
         else:
-            return f"""This sentence is categorized as a neutral sentence 
-                        with a probability of {round(score * 100, 0)}%"""
+            return f"""This sentence is categorized as a neutral sentence
+ with a probability of {round(score * 100, 0)}%"""
     else:
-        return f"""This sentence is difficult to categorize"""
+        return """This sentence is difficult to categorize"""
 
 
 whisper_model = load_whisper_model()
