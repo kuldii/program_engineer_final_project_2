@@ -7,20 +7,65 @@ from transformers import pipeline
 
 @st.cache_resource
 def load_whisper_model():
-    # Have many variants : tiny, base, small, medium or large
-    return whisper.load_model("large",)
+    """
+    Loads the 'large' variant of the OpenAI Whisper model. This model is used for
+    transcribing audio to text.
+
+    Returns:
+        whisper.Whisper: A Whisper model instance loaded with the 'large' variant.
+    """
+    return whisper.load_model("large")
 
 
 @st.cache_resource
 def load_sentiment_model():
+    """
+    Loads a sentiment analysis model from Hugging Face's model hub. Specifically, it loads
+    the 'sismetanin/rubert-ru-sentiment-rusentiment' model which is fine-tuned for Russian
+    language sentiment analysis.
+
+    Returns:
+        transformers.Pipeline: A pipeline for text classification with the loaded model.
+    """
     return pipeline("text-classification",
                     model="sismetanin/rubert-ru-sentiment-rusentiment")
+
+
+def interpret_sentiment_result(sent: list) -> str:
+    """
+    Interprets the sentiment analysis result and returns a formatted string based on the
+    label and score.
+
+    Args:
+        sent_obj (list): A list containing the sentiment analysis result with 'label' and 'score'.
+
+    Returns:
+        str: A formatted string describing the sentiment classification and its confidence.
+        :param sent:
+    """
+    label = sent[0]['label']
+    score = sent[0]['score']
+
+    if score > 0.4:
+        if label == 'LABEL_2':
+            return f"""This sentence is categorized as a good sentence 
+                        with a probability of {round(score * 100, 0)}%"""
+        elif label == 'LABEL_0':
+            return f"""This sentence is categorized as a bad sentence
+                        with a probability of {round(score * 100, 0)}%"""
+        elif label == 'LABEL_3':
+            return f"""This sentence may be bad. Need your attention"""
+        else:
+            return f"""This sentence is categorized as a neutral sentence 
+                        with a probability of {round(score * 100, 0)}%"""
+    else:
+        return f"""This sentence is difficult to categorize"""
 
 
 whisper_model = load_whisper_model()
 sentiment = load_sentiment_model()
 
-st.title("Russian Speech to Text")
+st.title("Classification of Russian speech intonation")
 st.write("""Upload an audio file in Russian""")
 
 audio_file = st.file_uploader("Upload Audio", type=["wav", "mp3", "m4a"])
@@ -45,21 +90,8 @@ if audio_file is not None:
         with st.spinner("Classify translation..."):
             st.write("Classified Text:")
             result = sentiment(transcription_text)
-            st.write(result)
-            if (result[0]['label'] == 'LABEL_2'):
-                st.write(f"""This sentence is categorized as
-                         a good sentence with a score of
-                         {result[0]['score']}""")
-            elif (result[0]['label'] == 'LABEL_0'):
-                st.write(f"""This sentence is categorized as
-                         a bad sentence with a score of
-                         {result[0]['score']}""")
-            else:
-                if (result[0]['score'] >= 0.7):
-                    st.write(f"""This sentence is categorized as
-                             a neutral sentence with a score of
-                             {result[0]['score']}""")
-                else:
-                    st.write("This sentence is difficult to categorize")
+            sentiment_text = interpret_sentiment_result(result)
+            st.write(sentiment_text)
+
     except Exception as e:
         st.error(f"Error processing audio file: {e}")
