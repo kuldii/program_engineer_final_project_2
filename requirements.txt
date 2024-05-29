@@ -1,4 +1,3 @@
-ffmpeg-python
 pydub==0.25.1
 streamlit==1.34.0
 transformers==4.41.0
