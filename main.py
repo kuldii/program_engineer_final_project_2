@@ -3,30 +3,21 @@ import whisper
 import tempfile
 from pydub import AudioSegment
 from transformers import pipeline
-from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 
 
 @st.cache_resource
 def load_whisper_model():
     # Have many variants : tiny, base, small, medium or large
-    return whisper.load_model("large")
+    return whisper.load_model("large",)
 
 
 @st.cache_resource
 def load_sentiment_model():
-    return pipeline("sentiment-analysis",
-                    model="distilbert-base-uncased-finetuned-sst-2-english")
-
-
-@st.cache_resource
-def load_translation_model():
-    tokenizer = AutoTokenizer.from_pretrained("Helsinki-NLP/opus-mt-ru-en")
-    model = AutoModelForSeq2SeqLM.from_pretrained("Helsinki-NLP/opus-mt-ru-en")
-    return pipeline("translation_ru_to_en", model=model, tokenizer=tokenizer)
+    return pipeline("text-classification",
+                    model="sismetanin/rubert-ru-sentiment-rusentiment")
 
 
 whisper_model = load_whisper_model()
-translation = load_translation_model()
 sentiment = load_sentiment_model()
 
 st.title("Russian Speech to Text")
@@ -46,22 +37,15 @@ if audio_file is not None:
 
         with st.spinner("Transcribing audio..."):
             transcription_result = whisper_model.transcribe(
-                audio_path, language="ru")
+                audio_path, language="ru", fp16=False)
             transcription_text = transcription_result["text"]
             st.write("Transcription in Russian:")
             st.write(transcription_text)
 
-        with st.spinner("Translating transcription..."):
-            all_transcription_text = transcription_text.split(".")
-            translated_text = translation(all_transcription_text)
-            st.write("Translation in English:")
-            st.write(translated_text)
-
         with st.spinner("Classify translation..."):
             st.write("Classified Text:")
-            for text in translated_text:
-                st.write(text['translation_text'])
-                result = sentiment(text['translation_text'])
-                st.write(result)
+            result = sentiment(transcription_text)
+            st.write(result)
+
     except Exception as e:
         st.error(f"Error processing audio file: {e}")

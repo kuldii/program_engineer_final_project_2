@@ -52,3 +52,6 @@ streamlit run main.py
 ### Step 4: Open the application in the browser
 Open your web browser and go to the following address:
 http://localhost:8501
+
+### Step 4: Open the application in the browser
+Load audio with speech in russian from your device and wait the answer

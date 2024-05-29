@@ -1,0 +1,12 @@
+/env/
+/models/
+*.zip
+/.ipynb_checkpoints/
+.DS_Store
+__pycache__/
+.idea/
+venv/
+.venv/
+.git/
+.idea
+myenv/
