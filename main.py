@@ -31,7 +31,7 @@ def load_sentiment_model():
                     model="sismetanin/rubert-ru-sentiment-rusentiment")
 
 
-def interpret_sentiment_result(sent: list) -> str:
+def interpret_sentiment_result(sent: list, trashhold=0.8) -> str:
     """
     Interprets the sentiment analysis result and returns a formatted string based on the
     label and score.
@@ -41,16 +41,17 @@ def interpret_sentiment_result(sent: list) -> str:
 
     Returns:
         str: A formatted string describing the sentiment classification and its confidence.
+        :param trashhold:
         :param sent:
     """
     label = sent[0]['label']
     score = sent[0]['score']
 
-    if score > 0.4:
+    if score > trashhold:
         if label == 'LABEL_2':
             return f"""This sentence is categorized as a good sentence 
                         with a probability of {round(score * 100, 0)}%"""
-        elif label == 'LABEL_0':
+        elif label == 'LABEL_0' and score > trashhold:
             return f"""This sentence is categorized as a bad sentence
                         with a probability of {round(score * 100, 0)}%"""
         elif label == 'LABEL_3':
@@ -58,8 +59,13 @@ def interpret_sentiment_result(sent: list) -> str:
         else:
             return f"""This sentence is categorized as a neutral sentence 
                         with a probability of {round(score * 100, 0)}%"""
-    else:
-        return f"""This sentence is difficult to categorize"""
+    elif score > 0.4:
+        if label == 'LABEL_0' or label == 'LABEL_2' or label == 'LABEL_3':
+            return f"""This sentence may be bad. Need your attention"""
+        else:
+            return f"""This sentence is categorized as a neutral sentence 
+                        with a probability of {round(score * 100, 0)}%"""
+    return f"""This sentence is difficult to categorize. Need your attention"""
 
 
 whisper_model = load_whisper_model()
